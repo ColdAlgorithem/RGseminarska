@@ -31,9 +31,12 @@ class App extends Application {
         const scene = await new SceneLoader().loadScene(uri);
         const builder = new SceneBuilder(scene);
         this.scene = builder.build();
+        /*Primer dodajanja engea objekta v scean za dodajanje v aktivno zgolj to prestavi v update*/
         const tMesh = scene.meshes[0]
         const tTexture = scene.textures[0]
-        /*Primer dodajanja engea objekta v scean za dodajanje v aktivno zgolj to prestavi v update*/
+        const model = new Model(tMesh, tTexture);
+        //konec primera
+        this.scene.addNode(model)
         this.physics = new Physics(this.scene);
 
         // Find first camera.
