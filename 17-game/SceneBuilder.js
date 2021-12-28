@@ -25,6 +25,11 @@ export class SceneBuilder {
                 const floorTexture = this.spec.textures[spec.texture]
                 return new Model(floor,floorTexture,spec)
             }
+            case 'obj':{
+                const floor = new Floor(50,50)
+                const objTexture = this.spec.textures[spec.texture]
+                return new Model(floor,floorTexture,spec)
+            }
             default: return new Node(spec);
         }
     }
