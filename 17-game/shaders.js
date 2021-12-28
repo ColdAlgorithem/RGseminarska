@@ -16,6 +16,7 @@ uniform vec3 uLightColor;
 uniform vec3 uLightAttenuation;
 
 out vec2 vTexCoord;
+out vec3 v_position;
 out vec3 vLight;
 
 void main() {
@@ -39,6 +40,7 @@ void main() {
     vLight = ((ambient + diffuse + specular) * attenuation) * uLightColor;
     vTexCoord = aTexCoord;
     gl_Position = uProjection * vec4(vertexPosition, 1);
+    v_position = -(uViewModel * aPosition).xyz;
 }
 `;
 
@@ -49,11 +51,20 @@ uniform mediump sampler2D uTexture;
 
 in vec2 vTexCoord;
 in vec3 vLight;
+in vec3 v_position;
+
+uniform vec4 u_fogColor;
+uniform float u_fogDensity;
 
 out vec4 oColor;
 
 void main() {
-    oColor = texture(uTexture, vTexCoord) * vec4(vLight, 1);
+    #define LOG2 1.442695
+    vec4 color = texture(uTexture, vTexCoord) * vec4(vLight, 1);
+    float fogDistance = length(v_position);
+    float fogAmount = 1. - exp2(-u_fogDensity * u_fogDensity * fogDistance * fogDistance * LOG2);
+    fogAmount = clamp(fogAmount, 0., 1.);
+    oColor = mix(color,u_fogColor,fogAmount);
 }
 `;
 
