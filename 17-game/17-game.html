@@ -10,17 +10,35 @@
     <script type="module" src="17-game.js"></script>
 </head>
 <body>
-    <!-- za vse animecije orožji in hud elementov dodajaj sem in posodabljaj v 
+    <!-- za vse animacije orožji in hud elementov dodajaj sem in posodabljaj v 
     skripti za game. Npr. kot igralec pritisne miško ali space se zamenja frame za orožje-->
     <div class="overlay">
         <a class="back" href="../../index.html">Back</a>
-        <img class="HUDFrame" src="../common/images/hud2.png">
-        <img class="HUDWGun" src="../common/images/gunHud.png">
-        <img class="HUDPort" src="../common/images/Hudport.png">
-    
+        <div class="footer">
+            <div></div>
+            <div></div>
+            
+            <!-- WEAPON -->
+            <div id="weapondiv"><img id="pic" src="../common/images/shotgun.png"></div>
+
+            <div></div>
+            <div></div>
+            <!-- HUD HEADER -->
+            <div class="column">AMMO</div>
+            <div class="column">HEALTH</div>
+            <div class="column" style="grid-column-start: 4;">POINTS</div>
+            <div class="column" style="grid-column-start: 5;">WEAPON</div>
+
+            <!-- HUD ITEMS -->
+            <div class="column" id="ammodata">8</div>
+            <div class="column" id="hpdata">100</div>
+            <div class="column" style="grid-column-start: 4;" id="pointsdata">0</div>
+            <div class="column" style="grid-column-start: 5;" id="weapondata">SHOTGUN</div>
+            
+        </div>
     </div>
     <div class="fullscreen">
-        <canvas></canvas>
+        <canvas id="gamecanvas"></canvas>
     </div>
 </body>
 </html>
