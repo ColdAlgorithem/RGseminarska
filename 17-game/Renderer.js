@@ -37,10 +37,19 @@ export class Renderer {
     render(scene, camera,light) {
         const gl = this.gl;
 
+        var fogColor = [0.8, 0.9, 1, 1];
+        var settings = {
+          fogDens: 0.6,
+        };
+
+        gl.clearColor(...fogColor);
         gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
         const program = this.programs.simple;
         gl.useProgram(program.program);
+
+        var fogColorLocation = gl.getUniformLocation(program.program, "u_fogColor");
+        var fogDens = gl.getUniformLocation(program.program, "u_fogDensity");
 
         let matrix = mat4.create();
         let matrixStack = [];
@@ -50,6 +59,8 @@ export class Renderer {
         mat4.copy(matrix, viewMatrix);
         gl.uniformMatrix4fv(program.uniforms.uProjection, false, camera.projection);
 
+        gl.uniform4fv(fogColorLocation, fogColor);
+        gl.uniform1f(fogDens, settings.fogDens);
         gl.uniform1f(program.uniforms.uAmbient, light.ambient);
         gl.uniform1f(program.uniforms.uDiffuse, light.diffuse);
         gl.uniform1f(program.uniforms.uSpecular, light.specular);
