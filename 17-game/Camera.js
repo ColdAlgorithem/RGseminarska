@@ -32,15 +32,19 @@ export class Camera extends Node {
         // 1: add movement acceleration
         let acc = vec3.create();
         if (this.keys['KeyW']) {
+            steps.play();
             vec3.add(acc, acc, forward);
         }
         if (this.keys['KeyS']) {
+            steps.play();
             vec3.sub(acc, acc, forward);
         }
         if (this.keys['KeyD']) {
+            steps.play();
             vec3.add(acc, acc, right);
         }
         if (this.keys['KeyA']) {
+            steps.play();
             vec3.sub(acc, acc, right);
         }
 
@@ -122,3 +126,5 @@ Camera.defaults = {
     friction         : 0.2,
     acceleration     : 20
 };
+
+let steps = new Audio("../common/sounds/footsteps.mp3");
