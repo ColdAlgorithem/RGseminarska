@@ -20,6 +20,11 @@ export class SceneBuilder {
                 const texture = this.spec.textures[spec.texture];
                 return new Model(mesh, texture, spec);
             }
+            case 'target': {
+                const mesh = new Mesh(this.spec.meshes[spec.mesh]);
+                const texture = this.spec.textures[spec.texture];
+                return new Model(mesh, texture, spec);
+            }
             case 'floor':{
                 const floor = new Floor(50,50)
                 const floorTexture = this.spec.textures[spec.texture]

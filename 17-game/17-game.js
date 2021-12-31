@@ -122,7 +122,7 @@ document.addEventListener("pointerlockchange", () => {
 // BOSS MUSIC
 let theme = new Audio("../common/sounds/08. First Day in Hell.mp3");
 theme.currentTime = 0;
-theme.volume = 0.25;
+theme.volume = 0.55;
 theme.play();
 
 // WEAPON SOUNDS

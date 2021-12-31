@@ -39,7 +39,7 @@ export class Renderer {
 
         var fogColor = [0.8, 0.9, 1, 1];
         var settings = {
-          fogDens: 0.6,
+          fogDens: 0,
         };
 
         gl.clearColor(...fogColor);

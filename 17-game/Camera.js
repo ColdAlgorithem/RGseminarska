@@ -47,10 +47,10 @@ export class Camera extends Node {
             steps.play();
             vec3.sub(acc, acc, right);
         }
-
+        
         // 2: update velocity
         vec3.scaleAndAdd(c.velocity, c.velocity, acc, dt * c.acceleration);
-
+        console.log(vec3.scaleAndAdd(c.velocity, c.velocity, acc, dt * c.acceleration));
         // 3: if no movement, apply friction
         if (!this.keys['KeyW'] &&
             !this.keys['KeyS'] &&
@@ -123,7 +123,7 @@ Camera.defaults = {
     velocity         : [0, 0, 0],
     mouseSensitivity : 0.002,
     maxSpeed         : 3,
-    friction         : 0.2,
+    friction         : 0.5,
     acceleration     : 20
 };
 
