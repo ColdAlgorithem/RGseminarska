@@ -50,7 +50,7 @@ export class Camera extends Node {
         
         // 2: update velocity
         vec3.scaleAndAdd(c.velocity, c.velocity, acc, dt * c.acceleration);
-        console.log(vec3.scaleAndAdd(c.velocity, c.velocity, acc, dt * c.acceleration));
+        
         // 3: if no movement, apply friction
         if (!this.keys['KeyW'] &&
             !this.keys['KeyS'] &&
