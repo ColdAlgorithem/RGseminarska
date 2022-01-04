@@ -11,5 +11,7 @@ export class Scene {
     traverse(before, after) {
         this.nodes.forEach(node => node.traverse(before, after));
     }
-
+    removeNode(index){
+        this.nodes.splice(index,1);
+    }
 }

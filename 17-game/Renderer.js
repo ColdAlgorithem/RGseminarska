@@ -25,11 +25,13 @@ export class Renderer {
     prepare(scene) {
         scene.nodes.forEach(node => {
             node.gl = {};
-            if (node.mesh) {
-                Object.assign(node.gl, this.createModel(node.mesh));
-            }
-            if (node.image) {
-                node.gl.texture = this.createTexture(node.image);
+                if(node.visible){
+                if (node.mesh) {
+                    Object.assign(node.gl, this.createModel(node.mesh));
+                }
+                if (node.image) {
+                    node.gl.texture = this.createTexture(node.image);
+                }
             }
         });
     }
@@ -74,16 +76,17 @@ export class Renderer {
 
         scene.traverse(
             node => {
-                matrixStack.push(mat4.clone(matrix));
-                mat4.mul(matrix, matrix, node.transform);
-                if (node.gl.vao) {
-                    gl.bindVertexArray(node.gl.vao);
-                    gl.uniformMatrix4fv(program.uniforms.uViewModel, false, matrix);
-                    gl.activeTexture(gl.TEXTURE0);
-                    gl.bindTexture(gl.TEXTURE_2D, node.gl.texture);
-                    gl.uniform1i(program.uniforms.uTexture, 0);
-                    gl.drawElements(gl.TRIANGLES, node.gl.indices, gl.UNSIGNED_SHORT, 0);
-                }
+                    matrixStack.push(mat4.clone(matrix));
+                    mat4.mul(matrix, matrix, node.transform);
+                    if (node.gl.vao) {
+                        gl.bindVertexArray(node.gl.vao);
+                        gl.uniformMatrix4fv(program.uniforms.uViewModel, false, matrix);
+                        gl.activeTexture(gl.TEXTURE0);
+                        gl.bindTexture(gl.TEXTURE_2D, node.gl.texture);
+                        gl.uniform1i(program.uniforms.uTexture, 0);
+                        gl.drawElements(gl.TRIANGLES, node.gl.indices, gl.UNSIGNED_SHORT, 0);
+                    }
+                
             },
             node => {
                 matrix = matrixStack.pop();

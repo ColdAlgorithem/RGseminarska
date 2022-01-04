@@ -15,6 +15,7 @@ export class Camera extends Node {
         this.mousemoveHandler = this.mousemoveHandler.bind(this);
         this.keydownHandler = this.keydownHandler.bind(this);
         this.keyupHandler = this.keyupHandler.bind(this);
+        this.shoot = this.shoot.bind(this);
         this.keys = {};
     }
 
@@ -28,12 +29,14 @@ export class Camera extends Node {
             -Math.sin(c.rotation[1]), 0, -Math.cos(c.rotation[1]));
         const right = vec3.set(vec3.create(),
             Math.cos(c.rotation[1]), 0, -Math.sin(c.rotation[1]));
-
+        
         // 1: add movement acceleration
         let acc = vec3.create();
         if (this.keys['KeyW']) {
             steps.play();
+            
             vec3.add(acc, acc, forward);
+            
         }
         if (this.keys['KeyS']) {
             steps.play();
@@ -49,6 +52,7 @@ export class Camera extends Node {
         }
         
         // 2: update velocity
+        
         vec3.scaleAndAdd(c.velocity, c.velocity, acc, dt * c.acceleration);
         
         // 3: if no movement, apply friction
@@ -65,18 +69,21 @@ export class Camera extends Node {
         if (len > c.maxSpeed) {
             vec3.scale(c.velocity, c.velocity, c.maxSpeed / len);
         }
+        //console.log(this.transform);
     }
 
     enable() {
         document.addEventListener('mousemove', this.mousemoveHandler);
         document.addEventListener('keydown', this.keydownHandler);
         document.addEventListener('keyup', this.keyupHandler);
+        document.addEventListener('click', this.shoot);
     }
 
     disable() {
         document.removeEventListener('mousemove', this.mousemoveHandler);
         document.removeEventListener('keydown', this.keydownHandler);
         document.removeEventListener('keyup', this.keyupHandler);
+        document.removeEventListener('click', this.shoot);
 
         for (let key in this.keys) {
             this.keys[key] = false;
@@ -111,6 +118,10 @@ export class Camera extends Node {
 
     keyupHandler(e) {
         this.keys[e.code] = false;
+    }
+    shoot(e){
+        
+        
     }
 
 }

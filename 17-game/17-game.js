@@ -9,6 +9,7 @@ import { SceneLoader } from './SceneLoader.js';
 import { SceneBuilder } from './SceneBuilder.js';
 import { Model } from './Model.js';
 import { Mesh } from './Mesh.js';
+import { Node } from './Node.js';
 import { Light } from './Light.js';
 
 class App extends Application {
@@ -28,8 +29,12 @@ class App extends Application {
 
     async load(uri) {
         const scene = await new SceneLoader().loadScene(uri);
+        //console.log(scene);
         const builder = new SceneBuilder(scene);
         this.scene = builder.build();
+        //console.log(uri);
+        
+        //scena=this.scene;
         /*Primer dodajanja engea objekta v scean za dodajanje v aktivno zgolj to prestavi v update*/
         //const tMesh = scene.meshes[0]
         //const tTexture = scene.textures[0]
@@ -47,10 +52,51 @@ class App extends Application {
                 this.camera = node;
             }
         });
-
+        let z = 0;
         this.camera.aspect = this.aspect;
         this.camera.updateProjection();
         this.renderer.prepare(this.scene);
+        document.addEventListener('click', ()=>{
+            if(z!=0){
+
+                let pos = this.camera.translation;
+                console.log(pos);
+                let dir = [this.camera.transform[8],this.camera.transform[9],this.camera.transform[10]];
+                let newPos = pos;
+                let r2=0.2*0.2;
+                let g = [];
+                let x = [];
+                let a = 0;
+                let b = 0;
+                let c=0;
+                let d = 0;
+                let trk = false;
+                let rem = [];
+                for(let i = 0.1; i<=2;i+=0.2){
+                    newPos = [newPos[0] + i*this.camera.transform[8],newPos[1] + (-i)*this.camera.transform[9],newPos[2] + i*this.camera.transform[10]]
+                    for(let n = 1; n<=11; n++){
+                        g=this.scene.nodes[n].translation;
+                        x = [g[0]-pos[0],g[1]-pos[1],g[2]-pos[2]];
+                        a= dir[0]*dir[0]+dir[1]*dir[1]+dir[2]*dir[2];
+                        b= 2*(dir[0]*x[0]+dir[1]*x[1]+dir[2]*x[2]);
+                        c= (x[0]*x[0]+x[1]*x[1]+x[2]*x[2])-r2;
+                        d=(b*b)-(4*a*c);
+                        if(d>=0){
+                            trk=true;
+                            rem=[this.scene.nodes[n].translation[0],this.scene.nodes[n].translation[1],this.scene.nodes[n].translation[2]];
+                            console.log(d);
+                            this.scene.removeNode(n);
+                            break;
+                        }
+                        
+                        }
+                        if(trk){
+                            break;
+                    }
+                }
+            }
+            z++;
+        });
     }
 
     enableCamera() {
@@ -81,6 +127,8 @@ class App extends Application {
         if (this.physics) {
             this.physics.update(dt);
         }
+        
+        
     }
 
     render() {
@@ -98,8 +146,8 @@ class App extends Application {
             this.camera.updateProjection();
         }
     }
-
 }
+
 
 document.addEventListener('DOMContentLoaded', () => {
     const canvas = document.getElementById('gamecanvas');
@@ -189,7 +237,7 @@ document.addEventListener('keydown', (event) => {
 
 
 // RELOAD WEAPONS
-document,addEventListener('keydown', (event) => {
+document.addEventListener('keydown', (event) => {
     if (locked && !lockReload) {
             let name = event.key;
             let weap = document.getElementById("weapondata").innerHTML;
@@ -231,8 +279,11 @@ document,addEventListener('keydown', (event) => {
 document.addEventListener("click", () => { 
     if (locked && !lockSwitch && !lockReload) {
         let ammo;
+       
+       
         switch (document.getElementById("weapondata").innerHTML) {
             case "PISTOL":
+                
                 ammo = pistolammo - 1;
                 pistolammo = pistolammo - 1;
                 if (ammo >= 0) {
@@ -254,6 +305,7 @@ document.addEventListener("click", () => {
                 ammo = shotgunammo - 1;
                 shotgunammo = shotgunammo - 1;
                 if (ammo >= 0) {
+                    
                     document.getElementById("ammodata").innerHTML = ammo;
                     // strel zvok in animacija
                     document.getElementById("pic").src="../common/images/shotgun_shoot.png";
@@ -280,6 +332,7 @@ document.addEventListener("click", () => {
         }
     }
 })
+
 
 
 
