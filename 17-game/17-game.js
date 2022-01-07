@@ -53,50 +53,262 @@ class App extends Application {
             }
         });
         let z = 0;
+        document.addEventListener('keydown', (event) => {
+            if (locked && !lockSwitch) {
+                setTimeout(function() {
+                    let name = event.key;
+                    switch (name) {
+                        case "1":
+                            setTimeout(function() {
+                                document.getElementById("weapondata").innerHTML = "SHOTGUN";
+                                document.getElementById("ammodata").innerHTML = shotgunammo;
+                                lockReload = false;
+                                document.getElementById("pic").src="../common/images/shotgun.png";
+                            }, 1000);
+                                lockReload = true;
+                                switchsound.currentTime = 0;
+                                switchsound.play();
+                            break;
+                        case "2":
+                            setTimeout(function() {
+                                document.getElementById("weapondata").innerHTML = "PISTOL";
+                                document.getElementById("ammodata").innerHTML = pistolammo;
+                                lockReload = false;
+                                document.getElementById("pic").src="../common/images/pistol.png";
+                            }, 1000);
+                                lockReload = true;
+                                switchsound.currentTime = 0;
+                                switchsound.play();
+                            break;
+                        case "3":
+                            setTimeout(function() {
+                                document.getElementById("weapondata").innerHTML = "FISTS";
+                                document.getElementById("ammodata").innerHTML = "&#8734";
+                                document.getElementById("pic").src="../common/images/fist.png";
+                            }, 1000);
+                                switchsound.currentTime = 0;
+                                switchsound.play();
+                            break;
+                    }
+                }, 1000);
+            }
+        });
+        document.addEventListener('keydown', (event) => {
+            if (locked && !lockReload) {
+                    let name = event.key;
+                    let weap = document.getElementById("weapondata").innerHTML;
+                    if (name == "r") {
+                        switch (weap) {
+                            case "SHOTGUN":
+                                setTimeout(function() {
+                                    shotgunammo = 8;
+                                    document.getElementById("ammodata").innerHTML = shotgunammo;
+                                    lockSwitch = false;
+                                }, 1200);
+                                    reloadsound.currentTime = 0;
+                                    reloadsound.play();
+                                    lockSwitch = true;
+                                break;
+                            case "PISTOL":
+                                setTimeout(function() {
+                                    pistolammo = 20;
+                                    document.getElementById("ammodata").innerHTML = pistolammo;
+                                    lockSwitch = false;
+                                }, 700);
+                                    reloadsound.currentTime = 0;
+                                    reloadsound.play();
+                                    lockSwitch = true;
+                                break;
+                            case "FISTS":
+                                    setTimeout(function() {
+                                        lockSwitch = false;
+                                    }, 500);
+                                        lockSwitch = true;
+                                break;
+                        }
+                    }
+                 
+            }
+        })
+        document.addEventListener("click", () => { 
+            if (locked && !lockSwitch && !lockReload) {
+                let ammo;
+                let odl = false;
+               
+                switch (document.getElementById("weapondata").innerHTML) {
+                    case "PISTOL":
+                        
+                        ammo = pistolammo - 1;
+                        pistolammo = pistolammo - 1;
+                        if (ammo >= 0) {
+                            document.getElementById("ammodata").innerHTML = ammo;
+                            // strel zvok in animacija
+                            document.getElementById("pic").src="../common/images/pistol_shoot.png";
+                            setTimeout(function() {
+                                document.getElementById("pic").src="../common/images/pistol.png";
+                            },100);
+                            let pos = this.camera.translation;
+                            console.log(pos);
+                            let dir = [this.camera.transform[8],this.camera.transform[9],this.camera.transform[10]];
+                            let newPos = pos;
+                            let r2=0.2*0.2;
+                            let g = [];
+                            let x = [];
+                            let a = 0;
+                            let b = 0;
+                            let c=0;
+                            let d = 0;
+                            let trk = false;
+                            let rem = [];
+                            for(let i = 0.1; i<=2;i+=0.2){
+                                newPos = [newPos[0] + i*this.camera.transform[8],newPos[1] + (-i)*this.camera.transform[9],newPos[2] + i*this.camera.transform[10]]
+                                for(let n = 1; n<=11; n++){
+                                    g=this.scene.nodes[n].translation;
+                                    x = [g[0]-pos[0],g[1]-pos[1],g[2]-pos[2]];
+                                    a= dir[0]*dir[0]+dir[1]*dir[1]+dir[2]*dir[2];
+                                    b= 2*(dir[0]*x[0]+dir[1]*x[1]+dir[2]*x[2]);
+                                    c= (x[0]*x[0]+x[1]*x[1]+x[2]*x[2])-r2;
+                                    d=(b*b)-(4*a*c);
+                                    if(d>=0){
+                                        trk=true;
+                                        rem=[this.scene.nodes[n].translation[0],this.scene.nodes[n].translation[1],this.scene.nodes[n].translation[2]];
+                                        console.log(d);
+                                        this.scene.removeNode(n);
+                                        break;
+                                    }
+                                    
+                                    }
+                                    if(trk){
+                                        break;
+                                }
+                            }
+                        
+                            pistolfire.currentTime = 0;
+                            pistolfire.play();
+                        } else {
+                            // empty magazine sound
+                            pistolempty.currentTime = 0;
+                            pistolempty.play();
+                        }
+                        break;
+                    case "SHOTGUN":
+                        ammo = shotgunammo - 1;
+                        shotgunammo = shotgunammo - 1;
+                        if (ammo >= 0) {
+                            
+                            document.getElementById("ammodata").innerHTML = ammo;
+                            // strel zvok in animacija
+                            document.getElementById("pic").src="../common/images/shotgun_shoot.png";
+                            setTimeout(function() {
+                                document.getElementById("pic").src="../common/images/shotgun.png";
+                            },100);
+                            let pos = this.camera.translation;
+                            console.log(pos);
+                            let dir = [this.camera.transform[8],this.camera.transform[9],this.camera.transform[10]];
+                            let newPos = pos;
+                            let r2=0.2*0.2;
+                            let g = [];
+                            let x = [];
+                            let a = 0;
+                            let b = 0;
+                            let c=0;
+                            let d = 0;
+                            let trk = false;
+                            let rem = [];
+                            for(let i = 0.1; i<=2;i+=0.2){
+                                newPos = [newPos[0] + i*this.camera.transform[8],newPos[1] + (-i)*this.camera.transform[9],newPos[2] + i*this.camera.transform[10]]
+                                for(let n = 1; n<=11; n++){
+                                    g=this.scene.nodes[n].translation;
+                                    x = [g[0]-pos[0],g[1]-pos[1],g[2]-pos[2]];
+                                    a= dir[0]*dir[0]+dir[1]*dir[1]+dir[2]*dir[2];
+                                    b= 2*(dir[0]*x[0]+dir[1]*x[1]+dir[2]*x[2]);
+                                    c= (x[0]*x[0]+x[1]*x[1]+x[2]*x[2])-r2;
+                                    d=(b*b)-(4*a*c);
+                                    if(d>=0){
+                                        trk=true;
+                                        rem=[this.scene.nodes[n].translation[0],this.scene.nodes[n].translation[1],this.scene.nodes[n].translation[2]];
+                                        console.log(d);
+                                        this.scene.removeNode(n);
+                                        break;
+                                    }
+                                    
+                                    }
+                                    if(trk){
+                                        break;
+                                }
+                            }
+                            shotgunfire.currentTime = 0;
+                            shotgunfire.play();
+                        } else {
+                            // empty magazine sound
+                            pistolempty.currentTime = 0;
+                            pistolempty.play();
+                        }
+                        break;
+                    case "FISTS":
+                        // udarec zvok in animacija
+                        document.getElementById("pic").src="../common/images/fist_shoot.png";
+                            setTimeout(function() {
+                                document.getElementById("pic").src="../common/images/fist.png";
+                            },100);
+                            let pos = this.camera.translation;
+                            console.log(pos);
+                            let dir = [this.camera.transform[8],this.camera.transform[9],this.camera.transform[10]];
+                            let newPos = pos;
+                            let r2=0.2*0.2;
+                            let g = [];
+                            let x = [];
+                            let a = 0;
+                            let b = 0;
+                            let c=0;
+                            let d = 0;
+                            let trk = false;
+                            let rem = [];
+                            
+                                newPos = [newPos[0] + 1*this.camera.transform[8],newPos[1] + (-1)*this.camera.transform[9],newPos[2] + 1*this.camera.transform[10]]
+                                console.log(newPos);
+                                
+                                for(let n = 1; n<=11; n++){
+                                    g=this.scene.nodes[n].translation;
+                                    x = [g[0]-pos[0],g[1]-pos[1],g[2]-pos[2]];
+                                    a= dir[0]*dir[0]+dir[1]*dir[1]+dir[2]*dir[2];
+                                    b= 2*(dir[0]*x[0]+dir[1]*x[1]+dir[2]*x[2]);
+                                    c= (x[0]*x[0]+x[1]*x[1]+x[2]*x[2])-r2;
+                                    d=(b*b)-(4*a*c);
+                                    if(d>=0){
+                                        trk=true;
+                                        rem=[this.scene.nodes[n].translation[0],this.scene.nodes[n].translation[1],this.scene.nodes[n].translation[2]];
+                                        console.log(d);
+                                        this.scene.removeNode(n);
+                                        break;
+                                    }
+                                    
+                                    }
+                                    if(trk){
+                                        break;
+                                }
+                            
+                            
+                        punch.currentTime = 0;
+                        punch.play();
+                        break;
+                }
+                for (let i = 0; i<this.scene.nodes.length;i++){
+                    console.log(this.scene.nodes[i].type);
+                    if(this.scene.nodes[i].type=="target"){
+                        odl=true;
+                    }
+                }
+                if(!odl){
+                    console.log("here");
+                    location.replace("konec.html")
+                }
+            }
+        })
         this.camera.aspect = this.aspect;
         this.camera.updateProjection();
         this.renderer.prepare(this.scene);
-        document.addEventListener('click', ()=>{
-            if(z!=0){
-
-                let pos = this.camera.translation;
-                console.log(pos);
-                let dir = [this.camera.transform[8],this.camera.transform[9],this.camera.transform[10]];
-                let newPos = pos;
-                let r2=0.2*0.2;
-                let g = [];
-                let x = [];
-                let a = 0;
-                let b = 0;
-                let c=0;
-                let d = 0;
-                let trk = false;
-                let rem = [];
-                for(let i = 0.1; i<=2;i+=0.2){
-                    newPos = [newPos[0] + i*this.camera.transform[8],newPos[1] + (-i)*this.camera.transform[9],newPos[2] + i*this.camera.transform[10]]
-                    for(let n = 1; n<=11; n++){
-                        g=this.scene.nodes[n].translation;
-                        x = [g[0]-pos[0],g[1]-pos[1],g[2]-pos[2]];
-                        a= dir[0]*dir[0]+dir[1]*dir[1]+dir[2]*dir[2];
-                        b= 2*(dir[0]*x[0]+dir[1]*x[1]+dir[2]*x[2]);
-                        c= (x[0]*x[0]+x[1]*x[1]+x[2]*x[2])-r2;
-                        d=(b*b)-(4*a*c);
-                        if(d>=0){
-                            trk=true;
-                            rem=[this.scene.nodes[n].translation[0],this.scene.nodes[n].translation[1],this.scene.nodes[n].translation[2]];
-                            console.log(d);
-                            this.scene.removeNode(n);
-                            break;
-                        }
-                        
-                        }
-                        if(trk){
-                            break;
-                    }
-                }
-            }
-            z++;
-        });
+        
     }
 
     enableCamera() {
@@ -192,149 +404,6 @@ let lockSwitch = false;
 
 let shotgunammo = 8;
 let pistolammo = 20;
-
-// CHANGE WEAPONS
-document.addEventListener('keydown', (event) => {
-    if (locked && !lockSwitch) {
-        setTimeout(function() {
-            let name = event.key;
-            switch (name) {
-                case "1":
-                    setTimeout(function() {
-                        document.getElementById("weapondata").innerHTML = "SHOTGUN";
-                        document.getElementById("ammodata").innerHTML = shotgunammo;
-                        lockReload = false;
-                        document.getElementById("pic").src="../common/images/shotgun.png";
-                    }, 1000);
-                        lockReload = true;
-                        switchsound.currentTime = 0;
-                        switchsound.play();
-                    break;
-                case "2":
-                    setTimeout(function() {
-                        document.getElementById("weapondata").innerHTML = "PISTOL";
-                        document.getElementById("ammodata").innerHTML = pistolammo;
-                        lockReload = false;
-                        document.getElementById("pic").src="../common/images/pistol.png";
-                    }, 1000);
-                        lockReload = true;
-                        switchsound.currentTime = 0;
-                        switchsound.play();
-                    break;
-                case "3":
-                    setTimeout(function() {
-                        document.getElementById("weapondata").innerHTML = "FISTS";
-                        document.getElementById("ammodata").innerHTML = "&#8734";
-                        document.getElementById("pic").src="../common/images/fist.png";
-                    }, 1000);
-                        switchsound.currentTime = 0;
-                        switchsound.play();
-                    break;
-            }
-        }, 1000);
-    }
-});
-
-
-// RELOAD WEAPONS
-document.addEventListener('keydown', (event) => {
-    if (locked && !lockReload) {
-            let name = event.key;
-            let weap = document.getElementById("weapondata").innerHTML;
-            if (name == "r") {
-                switch (weap) {
-                    case "SHOTGUN":
-                        setTimeout(function() {
-                            shotgunammo = 8;
-                            document.getElementById("ammodata").innerHTML = shotgunammo;
-                            lockSwitch = false;
-                        }, 1200);
-                            reloadsound.currentTime = 0;
-                            reloadsound.play();
-                            lockSwitch = true;
-                        break;
-                    case "PISTOL":
-                        setTimeout(function() {
-                            pistolammo = 20;
-                            document.getElementById("ammodata").innerHTML = pistolammo;
-                            lockSwitch = false;
-                        }, 700);
-                            reloadsound.currentTime = 0;
-                            reloadsound.play();
-                            lockSwitch = true;
-                        break;
-                    case "FISTS":
-                            setTimeout(function() {
-                                lockSwitch = false;
-                            }, 500);
-                                lockSwitch = true;
-                        break;
-                }
-            }
-         
-    }
-})
-
-// SHOOTING (ANIMATION), SOUND, AMMO COUNTER
-document.addEventListener("click", () => { 
-    if (locked && !lockSwitch && !lockReload) {
-        let ammo;
-       
-       
-        switch (document.getElementById("weapondata").innerHTML) {
-            case "PISTOL":
-                
-                ammo = pistolammo - 1;
-                pistolammo = pistolammo - 1;
-                if (ammo >= 0) {
-                    document.getElementById("ammodata").innerHTML = ammo;
-                    // strel zvok in animacija
-                    document.getElementById("pic").src="../common/images/pistol_shoot.png";
-                    setTimeout(function() {
-                        document.getElementById("pic").src="../common/images/pistol.png";
-                    },100);
-                    pistolfire.currentTime = 0;
-                    pistolfire.play();
-                } else {
-                    // empty magazine sound
-                    pistolempty.currentTime = 0;
-                    pistolempty.play();
-                }
-                break;
-            case "SHOTGUN":
-                ammo = shotgunammo - 1;
-                shotgunammo = shotgunammo - 1;
-                if (ammo >= 0) {
-                    
-                    document.getElementById("ammodata").innerHTML = ammo;
-                    // strel zvok in animacija
-                    document.getElementById("pic").src="../common/images/shotgun_shoot.png";
-                    setTimeout(function() {
-                        document.getElementById("pic").src="../common/images/shotgun.png";
-                    },100);
-                    shotgunfire.currentTime = 0;
-                    shotgunfire.play();
-                } else {
-                    // empty magazine sound
-                    pistolempty.currentTime = 0;
-                    pistolempty.play();
-                }
-                break;
-            case "FISTS":
-                // udarec zvok in animacija
-                document.getElementById("pic").src="../common/images/fist_shoot.png";
-                    setTimeout(function() {
-                        document.getElementById("pic").src="../common/images/fist.png";
-                    },100);
-                punch.currentTime = 0;
-                punch.play();
-                break;
-        }
-    }
-})
-
-
-
 
 
 

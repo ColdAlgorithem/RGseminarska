@@ -68,6 +68,7 @@ Node.defaults = {
         max: [0, 0, 0],
 
     },
-    visible: true
+    visible: true,
+    type: "target"
 };
 
