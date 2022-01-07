@@ -252,7 +252,7 @@ class App extends Application {
                                 document.getElementById("pic").src="../common/images/fist.png";
                             },100);
                             let pos = this.camera.translation;
-                            console.log(pos);
+                            
                             let dir = [this.camera.transform[8],this.camera.transform[9],this.camera.transform[10]];
                             let newPos = pos;
                             let r2=0.2*0.2;
@@ -266,7 +266,6 @@ class App extends Application {
                             let rem = [];
                             
                                 newPos = [newPos[0] + 1*this.camera.transform[8],newPos[1] + (-1)*this.camera.transform[9],newPos[2] + 1*this.camera.transform[10]]
-                                console.log(newPos);
                                 
                                 for(let n = 1; n<=11; n++){
                                     g=this.scene.nodes[n].translation;
@@ -294,13 +293,13 @@ class App extends Application {
                         break;
                 }
                 for (let i = 0; i<this.scene.nodes.length;i++){
-                    console.log(this.scene.nodes[i].type);
+                    
                     if(this.scene.nodes[i].type=="target"){
                         odl=true;
                     }
                 }
                 if(!odl){
-                    console.log("here");
+                    
                     location.replace("konec.html")
                 }
             }
