@@ -25,11 +25,13 @@ export class Renderer {
     prepare(scene) {
         scene.nodes.forEach(node => {
             node.gl = {};
-            if (node.mesh) {
-                Object.assign(node.gl, this.createModel(node.mesh));
-            }
-            if (node.image) {
-                node.gl.texture = this.createTexture(node.image);
+                if(node.visible){
+                if (node.mesh) {
+                    Object.assign(node.gl, this.createModel(node.mesh));
+                }
+                if (node.image) {
+                    node.gl.texture = this.createTexture(node.image);
+                }
             }
         });
     }
@@ -43,7 +45,7 @@ export class Renderer {
 
         var fogColor = [0.8, 0.9, 1, 1];
         var settings = {
-          fogDens: 0.6,
+          fogDens: 0,
         };
 
         gl.clearColor(...fogColor);

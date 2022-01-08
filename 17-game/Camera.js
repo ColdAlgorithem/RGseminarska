@@ -36,6 +36,7 @@ export class Camera extends Node {
         if (this.keys['KeyW']) {
             steps.play();
             vec3.add(acc, acc, forward);
+            
         }
         if (this.keys['KeyS']) {
             steps.play();

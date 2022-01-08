@@ -29,6 +29,7 @@ class App extends Application {
 
     async load(uri) {
         const scene = await new SceneLoader().loadScene(uri);
+        //console.log(scene);
         const builder = new SceneBuilder(scene);
         this.scene = builder.build();
 
