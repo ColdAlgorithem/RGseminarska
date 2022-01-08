@@ -1,4 +1,5 @@
 import { vec3, mat4 } from '../../lib/gl-matrix-module.js';
+import { Camera } from './Camera.js';
 
 export class Physics {
 
@@ -11,6 +12,7 @@ export class Physics {
             if (node.velocity) {
                 vec3.scaleAndAdd(node.translation, node.translation, node.velocity, dt);
                 node.updateTransform();
+                
                 this.scene.traverse(other => {
                     if (node !== other) {
                         this.resolveCollision(node, other);

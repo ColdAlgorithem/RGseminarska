@@ -12,6 +12,8 @@ export class Node {
 
         this.children = [];
         this.parent = null;
+        this.enity= null
+        this.velocity=null
     }
 
     updateTransform() {
@@ -66,5 +68,9 @@ Node.defaults = {
     aabb: {
         min: [0, 0, 0],
         max: [0, 0, 0],
+
     },
+    visible: true,
+    type: "target",
 };
+

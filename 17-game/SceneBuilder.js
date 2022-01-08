@@ -13,17 +13,23 @@ export class SceneBuilder {
     }
 
     createNode(spec) {
+        let i = 0;
         switch (spec.type) {
             case 'camera': return new Camera(spec);
             case 'model': {
                 const mesh = new Mesh(this.spec.meshes[spec.mesh]);
                 const texture = this.spec.textures[spec.texture];
-                return new Model(mesh, texture, spec);
+                return new Model(mesh, texture, spec,true);
+            }
+            case 'target': {
+                const mesh = new Mesh(this.spec.meshes[spec.mesh]);
+                const texture = this.spec.textures[spec.texture];
+                return new Model(mesh, texture, spec,true);
             }
             case 'floor':{
                 const floor = new Floor(50,50)
                 const floorTexture = this.spec.textures[spec.texture]
-                return new Model(floor,floorTexture,spec)
+                return new Model(floor,floorTexture,spec,true)
             }
             default: return new Node(spec);
         }

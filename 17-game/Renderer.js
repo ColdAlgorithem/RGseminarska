@@ -1,8 +1,8 @@
 import { vec3, mat4 } from '../../lib/gl-matrix-module.js';
-
 import { WebGL } from '../../common/engine/WebGL.js';
-
 import { shaders } from './shaders.js';
+import { Light } from './Light.js';
+import { Model } from './Model.js';
 
 export class Renderer {
 
@@ -34,7 +34,11 @@ export class Renderer {
         });
     }
 
-    render(scene, camera,light) {
+    render(scene, camera){
+        this.renderScean(scene, camera);
+    }
+
+    renderScean(scene, camera) {
         const gl = this.gl;
 
         var fogColor = [0.8, 0.9, 1, 1];
@@ -50,6 +54,9 @@ export class Renderer {
 
         var fogColorLocation = gl.getUniformLocation(program.program, "u_fogColor");
         var fogDens = gl.getUniformLocation(program.program, "u_fogDensity");
+        gl.uniformMatrix4fv(program.uniforms.uProjection, false, camera.projection);
+        gl.uniform4fv(fogColorLocation, fogColor);
+        gl.uniform1f(fogDens, settings.fogDens);
 
         let matrix = mat4.create();
         let matrixStack = [];
@@ -58,31 +65,39 @@ export class Renderer {
         mat4.invert(viewMatrix, viewMatrix);
         mat4.copy(matrix, viewMatrix);
         gl.uniformMatrix4fv(program.uniforms.uProjection, false, camera.projection);
-
-        gl.uniform4fv(fogColorLocation, fogColor);
-        gl.uniform1f(fogDens, settings.fogDens);
-        gl.uniform1f(program.uniforms.uAmbient, light.ambient);
-        gl.uniform1f(program.uniforms.uDiffuse, light.diffuse);
-        gl.uniform1f(program.uniforms.uSpecular, light.specular);
-        gl.uniform1f(program.uniforms.uShininess, light.shininess);
-        gl.uniform3fv(program.uniforms.uLightPosition, light.position);
-        let color = vec3.clone(light.color);
-        vec3.scale(color, color, 1.0 / 255.0);
-        gl.uniform3fv(program.uniforms.uLightColor,  color);
-        gl.uniform3fv(program.uniforms.uLightAttenuation, light.attenuatuion);
-
-
+        
+        let lightCounter = 0;
         scene.traverse(
             node => {
                 matrixStack.push(mat4.clone(matrix));
                 mat4.mul(matrix, matrix, node.transform);
-                if (node.gl.vao) {
+                if (node instanceof Model) {
                     gl.bindVertexArray(node.gl.vao);
                     gl.uniformMatrix4fv(program.uniforms.uViewModel, false, matrix);
                     gl.activeTexture(gl.TEXTURE0);
                     gl.bindTexture(gl.TEXTURE_2D, node.gl.texture);
                     gl.uniform1i(program.uniforms.uTexture, 0);
                     gl.drawElements(gl.TRIANGLES, node.gl.indices, gl.UNSIGNED_SHORT, 0);
+                }
+                else if(node instanceof Light){
+                    let color = vec3.clone(node.ambientColor);
+                    vec3.scale(color, color, 1.0 / 255.0);
+                    gl.uniform3fv(program.uniforms['uAmbientColor[' + lightCounter + ']'], color);
+                    color = vec3.clone(node.diffuseColor);
+                    vec3.scale(color, color, 1.0 / 255.0);
+                    gl.uniform3fv(program.uniforms['uDiffuseColor[' + lightCounter + ']'], color);
+                    color = vec3.clone(node.specularColor);
+                    vec3.scale(color, color, 1.0 / 255.0);
+                    gl.uniform3fv(program.uniforms['uSpecularColor[' + lightCounter + ']'], color);
+                    let position = [0,0,0];
+                    mat4.getTranslation(position, node.transform);
+                    gl.uniform3fv(program.uniforms['uLightPosition[' + lightCounter + ']'], position);
+                    gl.uniform1f(program.uniforms['uShininess[' + lightCounter + ']'], node.shininess);
+                    gl.uniform1f(program.uniforms['Ka[' + lightCounter + ']'], node.Ka);
+                    gl.uniform1f(program.uniforms['Kd[' + lightCounter + ']'], node.Kd);
+                    gl.uniform1f(program.uniforms['Ks[' + lightCounter + ']'], node.Ks);
+                    gl.uniform3fv(program.uniforms['uLightAttenuation[' + lightCounter + ']'], node.attenuatuion);
+                    lightCounter++;
                 }
             },
             node => {
