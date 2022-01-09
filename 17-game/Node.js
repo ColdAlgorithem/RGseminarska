@@ -71,6 +71,9 @@ Node.defaults = {
 
     },
     visible: true,
-    type: "target",
+    type: "a"
+    
+   
+    
 };
 

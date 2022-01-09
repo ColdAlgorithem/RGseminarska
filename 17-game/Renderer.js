@@ -74,6 +74,7 @@ export class Renderer {
                 matrixStack.push(mat4.clone(matrix));
                 mat4.mul(matrix, matrix, node.transform);
                 if (node instanceof Model) {
+                    
                     gl.bindVertexArray(node.gl.vao);
                     gl.uniformMatrix4fv(program.uniforms.uViewModel, false, matrix);
                     gl.activeTexture(gl.TEXTURE0);
@@ -110,8 +111,9 @@ export class Renderer {
 
     createModel(model) {
         const gl = this.gl;
-
+        
         const vao = gl.createVertexArray();
+        
         gl.bindVertexArray(vao);
 
         gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer());
@@ -128,11 +130,12 @@ export class Renderer {
         gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(model.normals), gl.STATIC_DRAW);
         gl.enableVertexAttribArray(2);
         gl.vertexAttribPointer(2, 3, gl.FLOAT, false, 0, 0);
-
+        console.log(model.indices.length);
         const indices = model.indices.length;
+        
         gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, gl.createBuffer());
         gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(model.indices), gl.STATIC_DRAW);
-
+        
         return { vao, indices };
     }
 

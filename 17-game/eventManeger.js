@@ -1,5 +1,5 @@
 export class eventManeger{
-    constructor(camera,currNumofT=5){
+    constructor(camera,currNumofT=100){
         this.enemy = [];
         this.bullets=[];
         this.player=camera;

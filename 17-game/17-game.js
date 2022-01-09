@@ -10,6 +10,7 @@ import { SceneBuilder } from './SceneBuilder.js';
 import { Light } from './Light.js';
 import { runner } from './Enity.js';
 import { eventManeger } from './eventManeger.js';
+import { Mesh } from './Mesh.js';
 
 let targetsLeft=10;
 class App extends Application {
@@ -57,12 +58,14 @@ class App extends Application {
                 Object.assign(tempObject,{
                     enity: new runner(50,true,20,0.7,tempObject),
                     translation: this.eventManger.spawnPoints[Math.floor(Math.random())+this.eventManger.spawnPoints.length-1],
-                    scale: [1,1,1],
+                    scale: [0.05, 0.05, 0.05],
                     aabb: {
                         min: [-0.5, -0.5, -0.5],
                         max: [0.5, 0.5, 0.5]
                       },
-                    velocity:[0,0,0]
+                    velocity:[0,0,0],
+                    type:"enemy",
+                    texture:0
                 });
                 tempObject.updateTransform();
                 this.eventManger.enemy.push(tempObject)
@@ -71,6 +74,13 @@ class App extends Application {
             }
             this.scene.addNode(tempObject)
             console.log(this.eventManger)
+        }
+        
+        let spheres = [];
+        for(let r =0; r< this.scene.nodes.length; r++){
+            if(this.scene.nodes[r].type=="target" ||this.scene.nodes[r].type=="enemy"){
+                spheres.push(this.scene.nodes[r]);
+            }
         }
         let z = 0;
         document.addEventListener('keydown', (event) => {
@@ -172,7 +182,7 @@ class App extends Application {
                                 document.getElementById("pic").src="../common/images/pistol.png";
                             },100);
                             let pos = this.camera.translation;
-                            console.log(pos);
+                            //console.log(pos);
                             let dir = [this.camera.transform[8],this.camera.transform[9],this.camera.transform[10]];
                             let newPos = pos;
                             let r2=0.2*0.2;
@@ -186,8 +196,8 @@ class App extends Application {
                             let rem = [];
                             for(let i = 0.1; i<=2;i+=0.2){
                                 newPos = [newPos[0] + i*this.camera.transform[8],newPos[1] + (-i)*this.camera.transform[9],newPos[2] + i*this.camera.transform[10]]
-                                for(let n = 1; n<=11; n++){
-                                    g=this.scene.nodes[n].translation;
+                                for(let n = 0; n<spheres.length; n++){
+                                    g=spheres[n].translation;
                                     x = [g[0]-pos[0],g[1]-pos[1],g[2]-pos[2]];
                                     a= dir[0]*dir[0]+dir[1]*dir[1]+dir[2]*dir[2];
                                     b= 2*(dir[0]*x[0]+dir[1]*x[1]+dir[2]*x[2]);
@@ -195,9 +205,16 @@ class App extends Application {
                                     d=(b*b)-(4*a*c);
                                     if(d>=0){
                                         trk=true;
-                                        rem=[this.scene.nodes[n].translation[0],this.scene.nodes[n].translation[1],this.scene.nodes[n].translation[2]];
+                                        rem=[spheres[n].translation[0],spheres[n].translation[1],spheres[n].translation[2]];
+                                        if(spheres[n].type=="target"){
                                         targetsLeft--;
-                                        this.scene.removeNode(n);
+                                        this.scene.removeNode(spheres[n]);
+                                        spheres.splice(n,1);
+                                        }
+                                        else if(spheres[n].type=="enemy"){
+                                            this.scene.removeNode(spheres[n]);
+                                        spheres.splice(n,1);
+                                        }
                                         break;
                                     }
                                     
@@ -227,7 +244,7 @@ class App extends Application {
                                 document.getElementById("pic").src="../common/images/shotgun.png";
                             },100);
                             let pos = this.camera.translation;
-                            console.log(pos);
+                            
                             let dir = [this.camera.transform[8],this.camera.transform[9],this.camera.transform[10]];
                             let newPos = pos;
                             let r2=0.2*0.2;
@@ -241,9 +258,9 @@ class App extends Application {
                             let rem = [];
                             for(let i = 0.1; i<=2;i+=0.2){
                                 newPos = [newPos[0] + i*this.camera.transform[8],newPos[1] + (-i)*this.camera.transform[9],newPos[2] + i*this.camera.transform[10]]
-                                for(let n = 1; n<=11; n++){
+                                for(let n = 0; n<spheres.length; n++){
             
-                                    g=this.scene.nodes[n].translation;
+                                    g=spheres[n].translation;
                                     x = [g[0]-pos[0],g[1]-pos[1],g[2]-pos[2]];
                                     a= dir[0]*dir[0]+dir[1]*dir[1]+dir[2]*dir[2];
                                     b= 2*(dir[0]*x[0]+dir[1]*x[1]+dir[2]*x[2]);
@@ -251,9 +268,16 @@ class App extends Application {
                                     d=(b*b)-(4*a*c);
                                     if(d>=0){
                                         trk=true;
-                                        rem=[this.scene.nodes[n].translation[0],this.scene.nodes[n].translation[1],this.scene.nodes[n].translation[2]];
-                                        this.scene.removeNode(n);
+                                        rem=[spheres[n].translation[0],spheres[n].translation[1],spheres[n].translation[2]];
+                                        if(spheres[n].type=="target"){
                                         targetsLeft--;
+                                        this.scene.removeNode(spheres[n]);
+                                        spheres.splice(n,1);
+                                        }
+                                        else if(spheres[n].type=="enemy"){
+                                            this.scene.removeNode(spheres[n]);
+                                        spheres.splice(n,1);
+                                        }
                                         break;
                                     }
                                     
@@ -295,8 +319,8 @@ class App extends Application {
                             
                                 newPos = [newPos[0] + 1*this.camera.transform[8],newPos[1] + (-1)*this.camera.transform[9],newPos[2] + 1*this.camera.transform[10]]
                                 
-                                for(let n = 1; n<=11; n++){
-                                    g=this.scene.nodes[n].translation;
+                                for(let n = 0; n<spheres.length; n++){
+                                    g=spheres[n].translation;
                                     x = [g[0]-pos[0],g[1]-pos[1],g[2]-pos[2]];
                                     a= dir[0]*dir[0]+dir[1]*dir[1]+dir[2]*dir[2];
                                     b= 2*(dir[0]*x[0]+dir[1]*x[1]+dir[2]*x[2]);
@@ -304,15 +328,22 @@ class App extends Application {
                                     d=(b*b)-(4*a*c);
                                     if(d>=0){
                                         trk=true;
-                                        rem=[this.scene.nodes[n].translation[0],this.scene.nodes[n].translation[1],this.scene.nodes[n].translation[2]];
-                                        this.scene.removeNode(n);
+                                        rem=[spheres[n].translation[0],spheres[n].translation[1],spheres[n].translation[2]];
+                                        if(spheres[n].type=="target"){
                                         targetsLeft--;
+                                        this.scene.removeNode(spheres[n]);
+                                        spheres.splice(n,1);
+                                        }
+                                        else if(spheres[n].type=="enemy"){
+                                            this.scene.removeNode(spheres[n]);
+                                        spheres.splice(n,1);
+                                        }
                                         break;
                                     }
                                     
-                                }
-                                if(trk){
-                                    break;
+                                    }
+                                    if(trk){
+                                        break;
                                 }
                             
                             
@@ -321,6 +352,7 @@ class App extends Application {
                         break;
                 }
                 for (let i = 0; i<this.scene.nodes.length;i++){
+                    console.log(this.scene.nodes[i].type);
                     if(this.scene.nodes[i].type=="target"){
                         odl=true;
                     }

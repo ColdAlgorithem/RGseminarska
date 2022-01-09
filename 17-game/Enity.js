@@ -31,55 +31,55 @@ export class runner extends Enity{
         }
     }
     simpAnim(){
-        this.eNode.rotation[0]+=0.02
+        //this.eNode.rotation[0]+=0.02
         this.eNode.updateTransform()
     }
     move(player){
         let eNode=this.eNode;
-        this.eNode.rotation[0]+=0.02
+        //this.eNode.rotation[0]+=0.02
         let men=this.distGrid(mat4.getTranslation(player.translation, player.transform),mat4.getTranslation(this.eNode.translation, this.eNode.transform))
         let newMen=0
-        this.eNode.translation[0]+=0.02
+        this.eNode.translation[0]+=0.002
         this.eNode.updateTransform()
         newMen=this.distGrid(mat4.getTranslation(player.translation, player.transform),mat4.getTranslation(this.eNode.translation, this.eNode.transform))
         if(newMen>men){
-            this.eNode.translation[0]-=0.02
+            this.eNode.translation[0]-=0.002
             this.eNode.updateTransform()
         }
         else{
             return
         }
         
-        this.eNode.translation[0]-=0.02
+        this.eNode.translation[0]-=0.002
         this.eNode.updateTransform()
         newMen=this.distGrid(mat4.getTranslation(player.translation, player.transform),mat4.getTranslation(this.eNode.translation, this.eNode.transform))
 
         if(newMen>men){
-            this.eNode.translation[0]+=0.02
+            this.eNode.translation[0]+=0.002
             this.eNode.updateTransform()
         }
         else{
             return
         }
 
-        this.eNode.translation[2]+=0.02
+        this.eNode.translation[2]+=0.002
         this.eNode.updateTransform()
         newMen=this.distGrid(mat4.getTranslation(player.translation, player.transform),mat4.getTranslation(this.eNode.translation, this.eNode.transform))
 
         if(newMen>men){
-            this.eNode.translation[2]-=0.02
+            this.eNode.translation[2]-=0.002
             this.eNode.updateTransform()
             
         }
         else return
         
 
-        this.eNode.translation[2]-=0.01
+        this.eNode.translation[2]-=0.001
         this.eNode.updateTransform()
         newMen=this.distGrid(mat4.getTranslation(player.translation, player.transform),mat4.getTranslation(this.eNode.translation, this.eNode.transform))
         
         if(newMen>men){
-            this.eNode.translation[2]+=0.01
+            this.eNode.translation[2]+=0.001
             this.eNode.updateTransform()
         }
         else return 
@@ -87,14 +87,16 @@ export class runner extends Enity{
     }
 
     attack(player){
-        console.log("a")
-        console.log(player.player)
+        
         if(player.player && player.player.alive){
             let coinFlip = (Math.random());
-            console.log("a")
+            //console.log("a")
             if(coinFlip>0.97){
-                player.player.health-=this.dmg;
+                //player.player.health-=this.dmg;
                 player.player.death();
+                if(!player.alive){
+                   // location.replace("smrt.html")
+                }
             }
 
         }
