@@ -92,10 +92,10 @@ export class runner extends Enity{
             let coinFlip = (Math.random());
             //console.log("a")
             if(coinFlip>0.97){
-                //player.player.health-=this.dmg;
+                player.player.health-=this.dmg;
                 player.player.death();
                 if(!player.alive){
-                   // location.replace("smrt.html")
+                   location.replace("smrt.html")
                 }
             }
 
